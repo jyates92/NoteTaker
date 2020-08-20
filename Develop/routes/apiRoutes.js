@@ -1,52 +1,46 @@
-// ===============================================================================
-// ROUTING
-// ===============================================================================
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = function (app) {
-  // API GET Requests
-  // Below code handles when users "visit" a page.
-  // In each of the below cases when a user visits a link
-  // (ex: localhost:PORT/api/admin... they are shown a JSON of the data in the table)
-  // ---------------------------------------------------------------------------
 
   app.get("/api/notes", function (req, res) {
-    res.json({ message: "Hello" });
+    let notes = readFile();
+    res.json(notes);
   });
 
-  //   app.get("/api/waitlist", function (req, res) {
-  //     res.json(waitListData);
-  //   });
+  app.post("/api/notes", function (req, res) {
+    let notes = readFile();
+    let filePath = path.join("db", "db.json");
+    let note = { id: uuidv4() };
+    Object.assign(note, req.body);
+    // console.log(notes);
+    // console.log(req.body);
+    notes.push(note);
+    fs.writeFileSync(filePath, JSON.stringify(notes));
+    res.json(notes);
+  });
 
-  // API POST Requests
-  // Below code handles when a user submits a form and thus submits data to the server.
-  // In each of the below cases, when a user submits form data (a JSON object)
-  // ...the JSON is pushed to the appropriate JavaScript array
-  // (ex. User fills out a reservation request... this data is then sent to the server...
-  // Then the server saves the data to the tableData array)
-  // ---------------------------------------------------------------------------
+  function readFile() {
+    let filePath = path.join("db", "db.json");
+    let rawdata = fs.readFileSync(filePath);
+    let notes = JSON.parse(rawdata);
+    return notes;
+  }
 
-  //   app.post("/api/tables", function (req, res) {
-  //     // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
-  //     // It will do this by sending out the value "true" have a table
-  //     // req.body is available since we're using the body parsing middleware
-  //     if (tableData.length < 5) {
-  //       tableData.push(req.body);
-  //       res.json(true);
-  //     } else {
-  //       waitListData.push(req.body);
-  //       res.json(false);
-  //     }
-  //   });
-
-  //   // ---------------------------------------------------------------------------
-  //   // I added this below code so you could clear out the table while working with the functionality.
-  //   // Don"t worry about it!
-
-  //   app.post("/api/clear", function (req, res) {
-  //     // Empty out the arrays of data
-  //     tableData.length = 0;
-  //     waitListData.length = 0;
-
-  //     res.json({ ok: true });
-  //   });
+  app.delete("/api/notes/:id", function (req, res) {
+    console.log(req.params);
+    let notes = readFile();
+    let filePath = path.join("db", "db.json");
+    for (let i = 0; i < notes.length; i++) {
+      let note = notes[i];
+      console.log("note", note);
+      if (notes[i].id === req.params.id) {
+        notes.splice(i, 1);
+        break;
+      }
+    }
+    fs.writeFileSync(filePath, JSON.stringify(notes));
+    res.json({ message: "DELETED" });
+  });
 };
