@@ -57,7 +57,6 @@ const handleNoteSave = function () {
   };
 
   saveNote(newNote).then(() => {
-    console.log("Shut up");
     getAndRenderNotes();
     renderActiveNote();
   });
