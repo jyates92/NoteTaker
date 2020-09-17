@@ -16,12 +16,13 @@
   # Description
   This application stores notes in a database that you can save and remove from your list.
   # Image
-  ![PHOTO](img.com)
+  ![PHOTO](https://i.imgur.com/5Lge1do.jpg)
   # Tests
   none.
   # Email
   jeremiahyates1992@gmail.com
   # Github
-  github.com/jyates92
+  https://givemesomenotes.herokuapp.com/
+  https://github.com/jyates92/NoteTaker
   # License
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
